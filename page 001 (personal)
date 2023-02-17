@@ -6,9 +6,10 @@
 		- google fonts 
 		- phosphoricons by helena zhang and toby fried (https://phosphoricons.com/)
 		- tippy.js by atomiks
-		- isotope combination filtering by magnusthemes
+		- isotope combination filtering by metafizzy
 		- masonry by desandro
 		- google sheets integration by nonspace
+		- expandible menu by mistletoe
 
 	TERMS OF USE: 
 		- DO NOT DELETE, MOVE OR EDIT THE CREDIT
@@ -22,7 +23,7 @@
 <html>
 <head> 
 
-	<title> ana's characters </title>
+	<title> my characters </title>
 	<link rel="shortcut icon" href="{Favicon}">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,9 +57,9 @@ TO GET API KEY:
     4. Restrict application access to HTTP referrer and add the wildcard yoururl.tumblr.com/* (or for multipe sites if needed)
     5. Libraries > search for Google Sheets > Enable*/
     
-const sheetID = '1GR7VcdTTYsAFbgH7yBFzy9HP2AZdEY9XV_OExuzjTuQ';
+const sheetID = '1w-jtMicTen8eobWUc5SdaR55a5yqsn3XJS9k-5UCFrs';
 const sheetTab = 'DATA';
-const APIkey = 'AIzaSyCc-qJLIWuFi5urVqJqet0UwOJA54EWRCQ';
+const APIkey = 'AIzaSyCI4O0mvJbYJJor40P2d_z9Ysaj9gDNw8A';
 
 </script> 
 
@@ -108,13 +109,13 @@ const APIkey = 'AIzaSyCc-qJLIWuFi5urVqJqet0UwOJA54EWRCQ';
     --ColorBackground2: #202020; /* header + muse boxes bg */
     --ColorBorder: #505050;
     --ColorLinks: #fff; /*top bar + scroll to top + credit links*/
-    --ColorLinksHover: #c5a364;
-    --ColorMuseLinks: #e2d1b2; /* muses boxes links */
-    --ColorMuseLinksHover: #c5a364;
-    --ColorAccent1: #c5a364;
+    --ColorLinksHover: #b865a7;
+    --ColorMuseLinks: #f0c5e3; /* muses boxes links */
+    --ColorMuseLinksHover: #b865a7;
+    --ColorAccent1: #dea5ce;
     
-    --ColorGradient1: #c5a364;
-    --ColorGradient2: #e2d1b2; /* if you want a solid color instead of a gradient, use same colors in both variables */
+    --ColorGradient1: #b865a7;
+    --ColorGradient2: #eab0d9; /* if you want a solid color instead of a gradient, use same colors in both variables */
     --Glow: 0 0 10px; /* change last value to 0 if you don't want the glow */
     
     /* SIZES */
@@ -156,7 +157,7 @@ b {
 
 .iframe-controls--desktop {
    position:fixed;
-   margin-top:100px;
+   margin-top:60px;
    margin-right:0px;
    z-index:214748364789123456789;
    /* filter:invert(100%) hue-rotate(180deg);
@@ -256,7 +257,7 @@ header {
 #container { margin:100px auto; width:90%;}
 
 #grid {
-	margin:50px auto 0px;
+	margin:0px auto 0px;
 	text-align:center;
 }
 
@@ -296,40 +297,105 @@ header {
 	padding:5px;
 }
 
-.nav-link a {
+.nav-link a, #menubutton {
     display:flex;
 	justify-content: center;
   	align-items: center;
 	color: var(--ColorLinks);
 	text-decoration: none;
   	text-shadow:var(--Glow);
+  	-webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
 }
 
-.nav-link a:hover {
+.nav-link a:hover, #menubutton:hover {
 	color: var(--ColorLinksHover);
+}
+
+/*----- SLIDEOUT MENU -----*/
+
+#slideoutmenu {
+    transition: 0.5s;
+    text-align:center;
+     display: flex;
+     align-items: stretch;
+     flex-wrap: wrap;
+    border-right: 1px solid var(--ColorBorder);
+    
+    /*** IMPORTANT ***/
+    
+    width: 0; 
+    width:calc(300px + 2em);
+    position: fixed; 
+    top: 0;
+    left: -930px;
+    bottom:0;
+    background-color: var(--ColorBackground2);
+    overflow-x: hidden;
+     z-index: 10000000000000000000001;
+}
+
+.menucontent {
+    height:calc(100vh - 2em);
+    width:100%;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:flex-start;
+}
+
+/*----- SCROLLBAR -----*/
+
+.menucontent, #slideoutmenu {
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+    overflow-y: scroll; 
+}
+
+.menucontent::-webkit-scrollbar, #slideoutmenu::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+}
+
+/* for firefox */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ColorAccent1) transparent;
+}
+
+#slideoutmenu .ph-x {
+    position:fixed;
+    font-size:1.5em;
+    margin: 15px;
+}
+
+#slideoutmenu a {
+    text-decoration: none;
 }
 
 /*----- FILTERS -----*/
 
 .filters {
-	margin: 0px auto;
+	margin: 40px auto 0;
     display: flex;
 	flex-flow: row wrap;
-	justify-content: center;
-	align-items: center;
-	align-content: center;
-	padding: 10px 20px;
-	list-style:none; 
-    border-bottom: 1px solid var(--ColorBorder);
+	flex-direction:column;
+	padding: 10px 0px;
+	list-style:none;
+	width:85%;
 }
 
 .filters ul {
-	display: inline-block;
-	margin-right: 40px;
+	display: block;
+	margin-top: 20px;
 }
 
-.filters ul:last-of-type {
-	margin-right: 0px;
+.filters ul:first-of-type {
+	margin-top: 0px;
 }
 
 .filters li {
@@ -337,13 +403,15 @@ header {
     list-style:none;
     white-space: nowrap;
     display: inline;
-    margin-left: 7px;
 }
 
 .filters li a {
-    display:inline-block; 
-    font-style:normal; 
+    display:block; 
+    font-style:normal;
     text-decoration:none;
+    text-align:left;
+    text-transform:uppercase;
+    margin: 5px 0;
     color: var(--ColorText);
 }
 
@@ -358,11 +426,12 @@ header {
 }
 
 .filters b { 
-    font-family: var(--FontBody);	
-    text-transform:lowercase; 
-    display: inline-block;
-    margin-right: 10px;
-    font-weight:500;
+    font-family: var(--FontAccent);	
+	font-size: 1.3em;
+	font-weight: 300;
+	text-transform: uppercase;
+	letter-spacing:1.5px;
+	text-shadow:var(--Glow);
 }
 
 /*----- MUSES BOXES -----*/
@@ -379,8 +448,6 @@ header {
 .muse-desc {
 	padding: 15px;
 	text-transform:lowercase;
-	max-height:107.33px;
-	overflow-x:hidden!important;
 }
 
 .muse-desc {
@@ -417,7 +484,7 @@ header {
 	border-bottom: 1px solid var(--ColorBorder);
 }
 
-.muse-name {
+.muse-name a {
     font-family: var(--FontAccent);
 	background: var(--ColorAccent1); /* fallback for old browsers */
     background: linear-gradient(to right, var(--ColorGradient1) 0%, var(--ColorGradient2) 100%); 
@@ -427,6 +494,7 @@ header {
 	font-weight:500;
 	font-size: 1.45em;
 	text-transform: lowercase;
+	text-decoration:none;
 	letter-spacing: 1px;
 	margin-top:7px;
 	word-wrap: break-word;
@@ -436,6 +504,8 @@ header {
 	align-items: center;
 	align-content: center;
 }
+
+
 
 .muse-sub {
 	font-size: 0.9em;
@@ -561,15 +631,16 @@ header {
     
     <div class="top-bar">
 	
-	<div class="title"> <i class="ph-heart"></i> ana's characters </div>
+	<div class="title"> <i class="ph-fire"></i> my characters </div>
 
-<!-- // NAVIGATION -->
+<!-- NAVIGATION -->
 
 <div id="nav">
   	<div class="nav-link"><a href="/" title="home"><i class="ph-house"></i></a></div>
 	<div class="nav-link"><a href="/ask" title="message"><i class="ph-chat-circle"></i></a></div>
-	<div class="nav-link"><a href="/nav" title="navigation"><i class="ph-map-trifold"></i></a></div>
-	<div class="nav-link"><a href="https://www.pinterest.es/moonflowcr/_saved/" title="pinterest"><i class="ph-pinterest-logo"></i></a></div>
+	<div class="nav-link"><a href="/" title="link"><i class="ph-map-trifold"></i></a></div>
+	<div class="nav-link"><a href="/" title="link"><i class="ph-moon"></i></a></div>
+	<div class="nav-link" id="menubutton" onclick="openNav()" title="menu"><i class="ph-dots-three-bold"></i></a></div>
 	<!-- <div class="nav-link"><a class=“controls-button” title="tumblr controls"><i class="ph-gear"></i></a></div> -->
 	
 </div>	
@@ -578,27 +649,58 @@ header {
 
 <!-- // NAVIGATION -->
 
+<!-- SLIDEOUT MENU -->
+
+<div id="slideoutmenu">
+    
+    <a href="javascript:void(0)" onclick="closeNav()" title="exit menu">
+    <i class="ph-x"></i>
+</a>
+    
+<div class="menucontent">   
+
 <!-- FILTERS -->
 
 <div class="filters">
 	
 	<ul class="filter option-set exclusive" data-filter-group="group one">
+	<b>group one</b>
      	<li><a href="#" data-filter-value="" class="selected">all</a></li>
-     	<li><a href="#" data-filter-value=".open">open</a></li>
-     	<li><a href="#" data-filter-value=".exclusive">exclusive</a></li>
+     	<li><a href="#" data-filter-value=".1">one</a></li>
+     	<li><a href="#" data-filter-value=".2">two</a></li>
+     	<li><a href="#" data-filter-value=".3">three</a></li>
    	</ul>
 
    	
 	<ul class="filter option-set exclusive" data-filter-group="group two">
-	<b>verse</b>
+	<b>group two</b>
      	<li><a href="#" data-filter-value="" class="selected">all</a></li>
-     	<li><a href="#" data-filter-value=".coa">city of angels</a></li>
-     	<li><a href="#" data-filter-value=".devils">devil's paradise</a></li>
+     	<li><a href="#" data-filter-value=".a">a</a></li>
+     	<li><a href="#" data-filter-value=".b">b</a></li>
+     	<li><a href="#" data-filter-value=".c">c</a></li>
+     	<li><a href="#" data-filter-value=".d">d</a></li>
+     	<li><a href="#" data-filter-value=".e">e</a></li>
    	</ul>
+   	
+   	<ul class="filter option-set exclusive" data-filter-group="group three">
+	<b>group three</b>
+     	<li><a href="#" data-filter-value="" class="selected">all</a></li>
+     	<li><a href="#" data-filter-value=".blue">blue</a></li>
+     	<li><a href="#" data-filter-value=".red">red</a></li>
+	<li><a href="#" data-filter-value=".yellow">yellow</a></li>
+	<li><a href="#" data-filter-value=".green">green</a></li>
+   	</ul>
+
 
 </div>
 
 <!-- // FILTERS -->
+
+</div>
+    
+</div>
+
+<!-- // SLIDEOUT MENU -->
 
 </header>
 
@@ -617,7 +719,7 @@ header {
     <div class="grid-item {{this.filters}}">
 	
 	<div class="muse-info">
-		<div class="muse-name"> {{{this.name}}} </div>
+		<div class="muse-name"><a href="{{this.link}}" title="tag"> {{{this.name}}} </a> </div>
 		<div class="muse-sub"> {{{this.subtitle}}} </div>
 		
 	</div>
@@ -626,49 +728,24 @@ header {
 		   {{{this.description}}}
 		   <div class="muse-li"><i class="ph-heart"></i>{{{this.loveinterest}}}</div>
 		</div>
-		
+		<!-- hiding links from here
 		<div class="muse-links">
 			<a href="{{this.link1}}" title="{{this.link1title}}"><i class="ph-{{this.link1icon}}"></i></a>
 			<a href="{{this.link2}}" title="{{this.link2title}}"><i class="ph-{{this.link2icon}}"></i></a>
 			<a href="{{this.link3}}" title="{{this.link3title}}"><i class="ph-{{this.link3icon}}"></i></a>
 			
-			<!-- hiding links from here
+			
 			<a href="{{this.link4}}" title="{{this.link4title}}"><i class="ph-{{this.link4icon}}"></i></a>
 			<a href="{{this.link5}}" title="{{this.link5title}}"><i class="ph-{{this.link5icon}}"></i></a>
-			// to here -->
 			
-		</div>
+			
+		</div>// to here -->
 
 	</div>
 	
 	{{/each}}
 	
 </script>	
-
-    <!-- to use the non-spreadsheets version, use this template from here 
-
-	<div class="grid-item 1a 2a">
-	
-	<div class="muse-info">
-		<div class="muse-name"> character name </div>
-		<div class="muse-sub"> faceclaim </div>
-		
-	</div>
-	
-	<div class="muse-desc"> 
-		    gender. pronouns. sexuality. occupation. any extra important info. just keep it short so it looks right, four lines tops. like this one. looks nice and neat, huh?
-		</div>
-		
-		<div class="muse-links">
-			<a href="#" title="link"><i class="ph-hash"></i></a>
-			<a href="#" title="link"><i class="ph-hash"></i></a>
-			<a href="#" title="link"><i class="ph-hash"></i></a>
-			<a href="#" title="link"><i class="ph-hash"></i></a>
-		</div>
-
-	</div>
-	
-	<!-- / to here -->
 	
 <!-- END OF MUSES. DO NOT EDIT BELOW THIS LINE -->
 
@@ -684,11 +761,15 @@ header {
 
 <a id="cred" href="https://moonflowcr.tumblr.com/" title="by moonflowcr"><i class="ph-moon-stars"></i></a>
 
-<!-- JAVASCRIPT -->
+<!-- JAVASCRIPT STARTS HERE
 
-<!-- scroll to top -->
+GENERAL SCRIPTS -->
 
 <script>
+
+<!-- SCROLL TO TOP -->
+
+
 
 $(document).ready(function(){
     $('a#totop').click(function(){
@@ -696,7 +777,26 @@ $(document).ready(function(){
         return false;
     });
 });
- 
+
+
+// SLIDEOUT MENU
+
+// nav
+function openNav() {
+    // adjust to your desired width
+    // change "width" to "height" if you want it to be top/bottom
+    document.getElementById("slideoutmenu").style.width = "calc(300px - 2em)";
+    // change "right" to where you want it to come from (i.e. left/top)
+    document.getElementById("slideoutmenu").style.left = "0px";
+}
+
+function closeNav() {
+    // change "width" to "height" if you want it to be top/bottom
+    document.getElementById("slideoutmenu").style.width = "0";
+    // change "right" to where you want it to come from (i.e. left/top)
+    document.getElementById("slideoutmenu").style.left = "-930px";
+}
+
 </script>
 
 <!-- GOOGLE SHEETS INTEGRATION  -->
