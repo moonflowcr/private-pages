@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+
+<!-- PAGE 001, by codesbyana
+
+	CREDITS:
+		- google fonts 
+		- phosphoricons by helena zhang and toby fried (https://phosphoricons.com/)
+		- tippy.js by atomiks
+		- isotope combination filtering by magnusthemes
+		- masonry by desandro
+		- google sheets integration by nonspace
+
+	TERMS OF USE: 
+		- DO NOT DELETE, MOVE OR EDIT THE CREDIT
+		- DO NOT USE AS A BASE CODE. FEEL FREE TO MAKE MINOR CUSTOMIZATIONS BUT DO NOT EDIT PAST THE POINT OF RECOGNITION OR REPOST IT AS YOUR OWN
+		- DO NOT STEAL PARTS FROM THIS CODE
+	
+	Thank you for using! ♡
+
+ -->
+ 
+<html>
+<head> 
+
+	<title> ana's characters </title>
+	<link rel="shortcut icon" href="{Favicon}">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SCRIPTS -->
+
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+
+<!--HANDLEBARS.JS--> 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"></script> 
+            
+<!--PAGE SETTINGS--> 
+<script> 
+/*TO GET THE SHEET ID: 
+1. Go to your spreadsheet > File > Publish to web. 
+2. Click on "Entire Document" and select the speficic sheet (in the example it is called "MAIN") > publish, ignore the URL. 
+3. File > Share > Anyone with link can share. This URL is important. 
+4. Copy the following string from the URL and paste it in sheetID: 
+
+Example: 
+            
+https://docs.google.com/spreadsheets/d/ 
+  1jKi9Knw7e5qr4bXr_zQib8FwpGM7E6eqRx1tH3JruIA (this part) 
+/edit?usp=sharing
+
+TO GET API KEY:
+    1. Go to https://console.cloud.google.com/projectselector2/apis/dashboard 
+    (of the account the sheet is under)
+    2. Create new project
+    3. Create credentials, choose API key (copy this)
+    4. Restrict application access to HTTP referrer and add the wildcard yoururl.tumblr.com/* (or for multipe sites if needed)
+    5. Libraries > search for Google Sheets > Enable*/
+    
+const sheetID = '1GR7VcdTTYsAFbgH7yBFzy9HP2AZdEY9XV_OExuzjTuQ';
+const sheetTab = 'DATA';
+const APIkey = 'AIzaSyCc-qJLIWuFi5urVqJqet0UwOJA54EWRCQ';
+
+</script> 
+
+<!--SHEET INTEGRATION--> 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/n0nspace/tumblr-sheets@main/nnspc-sheets.min.js"></script>
+
+
+<!-- ISOTOPE FILTERING -->
+<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+<script src="https://static.tumblr.com/p0knose/FpAp5c11c/magnusthemes.combofilters.js"></script>
+
+<!-- MASONRY LAYOUT -->
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="/path/to/masonry.pkgd.min.js"></script>
+
+<!---- TOOLTIPS ---->
+
+<script src="https://unpkg.com/popper.js@1"></script>
+<script src="https://unpkg.com/tippy.js@5/dist/tippy-bundle.iife.js"></script>
+
+<!-- FONTS: GOOGLE FONTS AND ICON FONTS -->
+
+<script src="https://unpkg.com/phosphor-icons"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+	
+<style type="text/css">
+
+/*----- BASICS -----*/
+
+* { 
+    margin: 0 ; 
+	padding: 0 ; 
+	box-sizing: border-box; 
+}
+
+:root {
+    /* FONTS */
+    --FontSize: 13px;
+    --MuseIconSize: 20px;
+    --FontBody: 'Poppins', sans-serif;
+    --FontAccent: 'Poppins', sans-serif;
+    
+    /* COLORS */
+    --ColorText: #eeeeee;
+    --ColorBackground: #111111; /* main bg */
+    --ColorBackground2: #202020; /* header + muse boxes bg */
+    --ColorBorder: #505050;
+    --ColorLinks: #fff; /*top bar + scroll to top + credit links*/
+    --ColorLinksHover: #c5a364;
+    --ColorMuseLinks: #e2d1b2; /* muses boxes links */
+    --ColorMuseLinksHover: #c5a364;
+    --ColorAccent1: #c5a364;
+    
+    --ColorGradient1: #c5a364;
+    --ColorGradient2: #e2d1b2; /* if you want a solid color instead of a gradient, use same colors in both variables */
+    --Glow: 0 0 10px; /* change last value to 0 if you don't want the glow */
+    
+    /* SIZES */
+ 	--MuseImgWidth: 300px; 
+    
+    /* OTHERS */
+ 	--BorderRadius: 5px;   
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+	background: var(--ColorBackground);
+	color: var(--ColorText);
+	font-size: var(--FontSize);
+	font-weight:300;
+	font-family: var(--FontBody);	
+}
+
+a {
+	color: var(--ColorLinks);
+	-webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+a:hover {
+    text-decoration:none;
+	color: var(--ColorLinksHover);
+}
+
+b {
+    font-weight:500;
+}
+
+/*----- TUMBLR CONTROLS -----*/
+
+.iframe-controls--desktop {
+   position:fixed;
+   margin-top:100px;
+   margin-right:0px;
+   z-index:214748364789123456789;
+   /* filter:invert(100%) hue-rotate(180deg);
+    -webkit-filter:invert(100%) hue-rotate(180deg);
+    -moz-filter:invert(100%) hue-rotate(180deg);
+    -o-filter:invert(100%) hue-rotate(180deg);
+    -ms-filter:invert(100%) hue-rotate(180deg); */  
+   -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+   -webkit-transform:scale(0.7,0.7);
+   -webkit-transform-origin: 100% 0%;
+   -ms-transform-origin:100% 0%;
+   -ms-transform:scale(0.7,0.7);
+   transform:scale(0.7,0.7);
+   transform-origin:100% 0%;
+   opacity:.7;
+}
+
+.iframe-controls--desktop:hover {
+   opacity:1;
+}
+
+
+/*----- TOOLTIPS -----*/
+
+.tippy-tooltip.custom-theme {
+    background-color: var(--ColorBackground);
+    color: var(--ColorText);
+    border: 1px solid var(--ColorBorder);
+    text-align: center;
+    padding:2px;
+    text-transform: uppercase;
+    letter-spacing:.1em;
+    font-size: 0.9em;
+    border-radius: var(--BorderRadius);
+    margin: 5px 0;
+}
+
+/*----- SCROLLBAR -----*/
+
+::-webkit-scrollbar {
+	width: 5px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+	border-radius: var(--BorderRadius);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--ColorAccent1);
+	border-radius: var(--BorderRadius);
+}
+
+/* for firefox */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ColorAccent1) transparent;
+}
+
+/*----- SELECTION -----*/
+
+::selection {
+  color: var(--ColorBackground);
+  background: var(--ColorAccent1);
+}
+
+::-moz-selection {
+  color: var(--ColorBackground);
+  background: var(--ColorAccent1);
+}
+
+/*----- LAYOUT -----*/
+
+header {
+    width: 100%;
+    background: var(--ColorBackground2);
+    border-bottom: 6px solid transparent;
+    border-image: linear-gradient(to right, var(--ColorGradient1) 0%, var(--ColorGradient2));
+    border-image-slice: 1;
+    width:100%;
+    position:fixed;
+    z-index:9999999999999999999999999;
+}
+
+.top-bar {
+	display: flex;
+	align-items: center;
+    width:100%;
+	padding:10px 30px;
+	
+}
+
+#container { margin:100px auto; width:90%;}
+
+#grid {
+	margin:50px auto 0px;
+	text-align:center;
+}
+
+/*----- NAVBAR -----*/
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-family: var(--FontAccent);	
+	font-size: 1.7em;
+	line-height: 1em;
+	font-weight: 300;
+	margin-right:50px;
+	text-transform: uppercase;
+	letter-spacing:1.5px;
+	text-shadow:var(--Glow);
+	width:49%;
+}
+
+.title i {
+	margin-right:10px;
+	font-size: 1em;
+	align-items: center;
+}
+
+#nav {
+	display:flex;
+	justify-content: flex-end!important;
+	gap: 10px;
+	width:49%;
+}	
+
+.nav-link i {
+	text-decoration: none;
+	font-size: 1.7em;
+	padding:5px;
+}
+
+.nav-link a {
+    display:flex;
+	justify-content: center;
+  	align-items: center;
+	color: var(--ColorLinks);
+	text-decoration: none;
+  	text-shadow:var(--Glow);
+}
+
+.nav-link a:hover {
+	color: var(--ColorLinksHover);
+}
+
+/*----- FILTERS -----*/
+
+.filters {
+	margin: 0px auto;
+    display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	padding: 10px 20px;
+	list-style:none; 
+    border-bottom: 1px solid var(--ColorBorder);
+}
+
+.filters ul {
+	display: inline-block;
+	margin-right: 40px;
+}
+
+.filters ul:last-of-type {
+	margin-right: 0px;
+}
+
+.filters li {
+    text-align: center;
+    list-style:none;
+    white-space: nowrap;
+    display: inline;
+    margin-left: 7px;
+}
+
+.filters li a {
+    display:inline-block; 
+    font-style:normal; 
+    text-decoration:none;
+    color: var(--ColorText);
+}
+
+.filters li a:hover {
+    color: var(--ColorLinksHover);
+}
+
+.filters li a.selected { 
+	margin-left: none;
+	opacity:1;
+	color: var(--ColorAccent1);
+}
+
+.filters b { 
+    font-family: var(--FontBody);	
+    text-transform:lowercase; 
+    display: inline-block;
+    margin-right: 10px;
+    font-weight:500;
+}
+
+/*----- MUSES BOXES -----*/
+
+.grid-item { 
+   	border-radius: var(--BorderRadius);
+   	background: var(--ColorBackground2);
+   	color: var(--ColorText);
+   	border: 1px solid var(--ColorBorder);
+   	width: var(--MuseImgWidth);
+   	margin-bottom:50px;
+}
+
+.muse-desc {
+	padding: 15px;
+	text-transform:lowercase;
+	max-height:107.33px;
+	overflow-x:hidden!important;
+}
+
+.muse-desc {
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+    overflow-y: scroll; 
+}
+
+.muse-desc::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+}
+
+.muse-li {
+	display:block;
+	font-size:1.1em;
+	text-transform:uppercase;
+	margin-top:5px;
+	text-shadow:var(--Glow);
+}
+
+.muse-li .ph-heart {
+    margin-right: 5px;
+    color:var(--ColorAccent1);
+    font-size:0.8em;
+}
+
+.muse-desc a {
+	text-decoration:none;
+}
+
+.muse-info {
+	padding: 5px 10px;
+	border-radius: var(--BorderRadius) var(--BorderRadius) 0 0;
+	border-bottom: 1px solid var(--ColorBorder);
+}
+
+.muse-name {
+    font-family: var(--FontAccent);
+	background: var(--ColorAccent1); /* fallback for old browsers */
+    background: linear-gradient(to right, var(--ColorGradient1) 0%, var(--ColorGradient2) 100%); 
+  -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+	font-weight:500;
+	font-size: 1.45em;
+	text-transform: lowercase;
+	letter-spacing: 1px;
+	margin-top:7px;
+	word-wrap: break-word;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+}
+
+.muse-sub {
+	font-size: 0.9em;
+	font-weight: 300;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	margin-top: -11px;
+	margin-bottom:5px;
+	padding: 5px 0;
+}
+
+.muse-links {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	border-top:1px solid var(--ColorBorder);
+	padding:5px;
+}
+
+.muse-links i {
+	text-decoration: none;
+	padding: 7px;
+}
+
+.muse-links a {
+	color: var(--ColorMuseLinks);
+	text-decoration: none;
+	justify-content: center;
+  	align-items: center;
+  	font-size: var(--MuseIconSize);
+  	text-shadow:var(--Glow);
+}
+
+.muse-links a:hover {
+	color: var(--ColorMuseLinksHover);
+}
+
+/*-----  CREDIT + SCROLL TO TOP -----*/
+
+#totop, #cred {
+	position: fixed;
+	text-decoration: none;
+	z-index: 9999999;
+}
+
+#totop {
+	bottom: 60px;
+	right: 15px;
+}
+
+#cred {
+	bottom: 15px;
+	right: 15px;
+}
+
+#totop i, #cred i {
+	text-decoration: none;
+	font-size: 1.6em;
+	margin-top:5px;
+	padding: 6px;
+	background: var(--ColorBackground2);
+	border: 1px solid var(--ColorBorder);
+	border-radius: var(--BorderRadius);
+}
+
+#totop, #cred {
+	color: var(--ColorLinks);
+	text-decoration: none;
+	justify-content: center;
+  	align-items: center;
+  	text-shadow:var(--Glow);
+}
+
+#totop:hover, #cred:hover {
+	color: var(--ColorLinksHover)!important;
+}
+
+/*----- RESPONSIVENESS -----*/
+
+@media only screen and (max-width: 479px) {
+
+.title { display:none;}
+
+#nav { margin-right:none; width:100%; justify-content: center!important;}
+
+.filters {
+    display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	padding: none;
+	list-style:none; 
+    border-bottom: 1px solid var(--ColorBorder);
+}
+
+.filters ul {
+    width:100%;
+    text-align:left;
+	display: inline;
+	margin-left: none!important;
+	margin-right: none!important;
+}
+
+.filters li {
+    margin-left: none;
+    text-align: center;
+}
+
+}
+
+
+</style>	
+	
+</head>
+	
+<body>
+
+<!-- HEADER -->
+
+<header>	
+    
+    <div class="top-bar">
+	
+	<div class="title"> <i class="ph-heart"></i> ana's characters </div>
+
+<!-- // NAVIGATION -->
+
+<div id="nav">
+  	<div class="nav-link"><a href="/" title="home"><i class="ph-house"></i></a></div>
+	<div class="nav-link"><a href="/ask" title="message"><i class="ph-chat-circle"></i></a></div>
+	<div class="nav-link"><a href="/nav" title="navigation"><i class="ph-map-trifold"></i></a></div>
+	<div class="nav-link"><a href="https://www.pinterest.es/moonflowcr/_saved/" title="pinterest"><i class="ph-pinterest-logo"></i></a></div>
+	<!-- <div class="nav-link"><a class=“controls-button” title="tumblr controls"><i class="ph-gear"></i></a></div> -->
+	
+</div>	
+
+</div>
+
+<!-- // NAVIGATION -->
+
+<!-- FILTERS -->
+
+<div class="filters">
+	
+	<ul class="filter option-set exclusive" data-filter-group="group one">
+     	<li><a href="#" data-filter-value="" class="selected">all</a></li>
+     	<li><a href="#" data-filter-value=".open">open</a></li>
+     	<li><a href="#" data-filter-value=".exclusive">exclusive</a></li>
+   	</ul>
+
+   	
+	<ul class="filter option-set exclusive" data-filter-group="group two">
+	<b>verse</b>
+     	<li><a href="#" data-filter-value="" class="selected">all</a></li>
+     	<li><a href="#" data-filter-value=".coa">city of angels</a></li>
+     	<li><a href="#" data-filter-value=".devils">devil's paradise</a></li>
+   	</ul>
+
+</div>
+
+<!-- // FILTERS -->
+
+</header>
+
+<!-- // HEADER -->
+
+<div id="container">
+
+<!-- MUSES -->
+
+<div id="grid">
+<!--handlebars template set up. id can be whatever. note the type-->
+<script id="character-template" type="text/x-handlebars-template">
+    <!--each makes it possible to repeat this for each sheet row-->
+    {{#each []}}
+    
+    <div class="grid-item {{this.filters}}">
+	
+	<div class="muse-info">
+		<div class="muse-name"> {{{this.name}}} </div>
+		<div class="muse-sub"> {{{this.subtitle}}} </div>
+		
+	</div>
+	
+	<div class="muse-desc"> 
+		   {{{this.description}}}
+		   <div class="muse-li"><i class="ph-heart"></i>{{{this.loveinterest}}}</div>
+		</div>
+		
+		<div class="muse-links">
+			<a href="{{this.link1}}" title="{{this.link1title}}"><i class="ph-{{this.link1icon}}"></i></a>
+			<a href="{{this.link2}}" title="{{this.link2title}}"><i class="ph-{{this.link2icon}}"></i></a>
+			<a href="{{this.link3}}" title="{{this.link3title}}"><i class="ph-{{this.link3icon}}"></i></a>
+			
+			<!-- hiding links from here
+			<a href="{{this.link4}}" title="{{this.link4title}}"><i class="ph-{{this.link4icon}}"></i></a>
+			<a href="{{this.link5}}" title="{{this.link5title}}"><i class="ph-{{this.link5icon}}"></i></a>
+			// to here -->
+			
+		</div>
+
+	</div>
+	
+	{{/each}}
+	
+</script>	
+
+    <!-- to use the non-spreadsheets version, use this template from here 
+
+	<div class="grid-item 1a 2a">
+	
+	<div class="muse-info">
+		<div class="muse-name"> character name </div>
+		<div class="muse-sub"> faceclaim </div>
+		
+	</div>
+	
+	<div class="muse-desc"> 
+		    gender. pronouns. sexuality. occupation. any extra important info. just keep it short so it looks right, four lines tops. like this one. looks nice and neat, huh?
+		</div>
+		
+		<div class="muse-links">
+			<a href="#" title="link"><i class="ph-hash"></i></a>
+			<a href="#" title="link"><i class="ph-hash"></i></a>
+			<a href="#" title="link"><i class="ph-hash"></i></a>
+			<a href="#" title="link"><i class="ph-hash"></i></a>
+		</div>
+
+	</div>
+	
+	<!-- / to here -->
+	
+<!-- END OF MUSES. DO NOT EDIT BELOW THIS LINE -->
+
+</div>
+
+<!-- // MUSES -->
+
+</div>
+
+<a id="totop" title="back to top"><i class="ph-arrow-up"></i></a>
+
+<!-- CREDIT. DO NOT EDIT -->
+
+<a id="cred" href="https://moonflowcr.tumblr.com/" title="by moonflowcr"><i class="ph-moon-stars"></i></a>
+
+<!-- JAVASCRIPT -->
+
+<!-- scroll to top -->
+
+<script>
+
+$(document).ready(function(){
+    $('a#totop').click(function(){
+        $('html, body').animate({scrollTop : 0},800);
+        return false;
+    });
+});
+ 
+</script>
+
+<!-- GOOGLE SHEETS INTEGRATION  -->
+
+<script>
+
+  //TEMPLATE LIST
+  //id + html selector
+  var templateList = [
+    ['#character-template', '#grid']
+  ];
+  
+  const contentLoaded = function() {
+      /*all functions and event handlers that interact or attach to the content you're generating from your spreadsheets needs to go in here. this includes grids like masonry/isotope filters and click events. scripts can't interact or change content that isn't yet generated!*/
+      
+      // TOOLTIPS
+
+tippy('[title]', {
+    theme: 'custom',
+    arrow: false,
+    followCursor: true,
+    delay: 100,
+    placement: 'top',
+    zIndex: 9999999999,
+    maxWidth: 400,
+ 
+    content(reference) {
+      const title = reference.getAttribute('title');
+      reference.removeAttribute('title');
+      return title;
+    },
+ });
+      
+    // ISOTOPE FILTERING + MASONRY
+
+ var $container = $("#grid"); 
+ var filters = {};
+ var $grid = $container.isotope({
+   itemSelector: ".grid-item", // the elements to filter
+    masonry: {
+    gutter: 50,
+    horizontalOrder: true,
+    fitWidth: true,
+    percentPosition: false
+    }
+ });
+ 
+ $(".option-set a").click(function(e) {
+   var $this = $(this);
+   var filterAttr = "data-filter-value";
+   var filterValue = $this.attr(filterAttr); 
+   var $optionSet = $this.parents(".option-set"); 
+   var group = $optionSet.attr("data-filter-group"); 
+   var filterGroup = filters[group];
+   if (!filterGroup) {
+     filterGroup = filters[group] = [];
+   }
+   var $selectAll = $optionSet.find('a['+filterAttr+'=""]'); // the 'select all' button in the current group
+   var activeClass = "selected", // the class for active links
+     exclClass = "exclusive"; // the class for exclusive groups
+ comboFiltering($this,filters,filterAttr,filterValue,$optionSet,group,$selectAll,activeClass,exclClass);
+   var comboFilter = getComboFilter(filters);
+   $grid.isotope({
+     filter: comboFilter
+   });
+   $this.toggleClass(activeClass);
+   e.preventDefault();
+ });
+ 
+  }
+</script>
+
+<!-- // JAVASCRIPT -->
+
+</body>
+
+</html>
